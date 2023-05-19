@@ -27,6 +27,41 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    const galleryCollection = client.db('disneyDreamlandDoll').collection('gallery');
+    const toysCollection = client.db('disneyDreamlandDoll').collection('toys');
+
+    app.get('/gallery', async (req, res) => {
+      const cursor = galleryCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+    app.get("/all-toys", async (req, res) => {
+      const result = await toysCollection.find({}).toArray()
+        // .find({})
+        // .sort({ createdAt: -1 })
+        // .toArray();
+      res.send(result);
+    });
+    // send add toy data to server  
+    app.post("/add-toy", async (req, res) => {
+      const body = req.body;
+      // body.createdAt = new Date();
+      const result = await toysCollection.insertOne(body);
+      console.log(body);
+      console.log(result);
+      res.send(result);
+      // if (result?.insertedId) {
+      //   return res.status(200).send(result);
+      // } else {
+      //   return res.status(404).send({
+      //     message: "can not insert try again leter",
+      //     status: false,
+      //   });
+      // }
+    });
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -41,9 +76,9 @@ run().catch(console.dir);
 
 // connection checking 
 app.get('/', (req, res) => {
-	res.send(`Disney Dreamland Doll server is running `);
+  res.send(`Disney Dreamland Doll server is running `);
 })
 
 app.listen(port, () => {
-	console.log(`Disney Dreamland Doll server is running on port ${port}`);
+  console.log(`Disney Dreamland Doll server is running on port ${port}`);
 })
