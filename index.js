@@ -68,6 +68,36 @@ async function run() {
       res.send(result);
     });
 
+    // get specific toy data for view
+    app.get("/all-toys/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = {
+        projection: { image: 1, name: 1, price: 1, rating: 1, subcategory: 1, availableQuantity: 1, productDetails: 1, sellerEmail: 1, sellerName: 1 },
+      };
+      const result = await toysCollection.findOne(query, options)
+      res.send(result);
+
+    })
+
+    // get specific toy data for update 
+    app.get("/update-toys/:id", async (req, res) => {
+      const id = req.params.id;
+      const body = req.body;
+      console.log(body);
+      const filter = { _id: new ObjectId(id) };
+      // const updateDetails = {
+      //   $set: {
+      //     title: body.title,
+      //     salary: body.salary,
+      //     category: body.category,
+      //   },
+      // };
+      const result = await jobsCollection.updateOne(filter, updateDoc);
+      res.send(result);
+
+    })
+
     // send add toy data to server  
     app.post("/add-toy", async (req, res) => {
       const body = req.body;
