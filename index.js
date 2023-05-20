@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 // const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb'); //from mongodb application code
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config(); // from .env document
 const app = express();
 const port = process.env.PORT || 5000;
@@ -31,7 +31,7 @@ async function run() {
     const galleryCollection = client.db('disneyDreamlandDoll').collection('gallery');
     const toysCollection = client.db('disneyDreamlandDoll').collection('toys');
 
-    // indexing name field 
+    // indexing toy name field 
     const indexKey = { name: 1 };
     const indexField = { name: "toyName" };
     const result = await toysCollection.createIndex(indexKey, indexField);
@@ -67,6 +67,7 @@ async function run() {
         .toArray();
       res.send(result);
     });
+    
     // send add toy data to server  
     app.post("/add-toy", async (req, res) => {
       const body = req.body;
@@ -85,6 +86,12 @@ async function run() {
       // }
     });
 
+    // delete a toy
+    app.delete('/my-toys/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await toysCollection.deleteOne(query);
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
