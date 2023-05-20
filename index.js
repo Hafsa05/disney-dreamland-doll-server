@@ -38,11 +38,18 @@ async function run() {
     })
     app.get("/all-toys", async (req, res) => {
       const result = await toysCollection.find({}).toArray()
-        // .find({})
-        // .sort({ createdAt: -1 })
-        // .toArray();
+      // .find({})
+      // .sort({ createdAt: -1 })
+      // .toArray();
       res.send(result);
     });
+
+    // get user specificec toy details 
+    app.get('/my-toys/:email', async (req, res) => {
+      const result = await toysCollection.find({ sellerEmail: req.params.email }).toArray();
+      res.send(result);
+    })
+
     // send add toy data to server  
     app.post("/add-toy", async (req, res) => {
       const body = req.body;
