@@ -67,7 +67,7 @@ async function run() {
         .toArray();
       res.send(result);
     });
-    
+
     // send add toy data to server  
     app.post("/add-toy", async (req, res) => {
       const body = req.body;
@@ -91,6 +91,7 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
       const result = await toysCollection.deleteOne(query);
+      res.send(result);
     })
 
     // Send a ping to confirm a successful connection
