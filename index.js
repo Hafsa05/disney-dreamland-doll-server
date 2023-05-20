@@ -81,19 +81,20 @@ async function run() {
     })
 
     // get specific toy data for update 
-    app.get("/update-toys/:id", async (req, res) => {
+    app.put("/update-toys/:id", async (req, res) => {
       const id = req.params.id;
       const body = req.body;
       console.log(body);
       const filter = { _id: new ObjectId(id) };
-      // const updateDetails = {
-      //   $set: {
-      //     title: body.title,
-      //     salary: body.salary,
-      //     category: body.category,
-      //   },
-      // };
-      const result = await jobsCollection.updateOne(filter, updateDoc);
+      const options = { upsert: true };
+      const updateDetails = {
+        $set: {
+          price: body.price,
+          availableQuantity: body.availableQuantity,
+          productDetails: body.productDetails,
+        },
+      };
+      const result = await toysCollection.updateOne(filter, updateDetails, options);
       res.send(result);
 
     })
