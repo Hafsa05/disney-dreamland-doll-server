@@ -31,6 +31,14 @@ async function run() {
     const galleryCollection = client.db('disneyDreamlandDoll').collection('gallery');
     const toysCollection = client.db('disneyDreamlandDoll').collection('toys');
 
+    // indexing name field 
+    const indexKey = { name: 1 };
+    const indexField = { name: "toyName" };
+    const result = await toysCollection.createIndex(indexKey, indexField);
+    console.log(result);
+
+
+
     app.get('/gallery', async (req, res) => {
       const cursor = galleryCollection.find();
       const result = await cursor.toArray();
@@ -44,12 +52,21 @@ async function run() {
       res.send(result);
     });
 
-    // get user specificec toy details 
+    // get user specific toy details 
     app.get('/my-toys/:email', async (req, res) => {
       const result = await toysCollection.find({ sellerEmail: req.params.email }).toArray();
       res.send(result);
     })
 
+    // search by toy name 
+    app.get("/toySearch/:text", async (req, res) => {
+      const toy = req.params.text;
+      const result = await toysCollection.find({
+        name: { $regex: toy, $options: "i" }
+      })
+        .toArray();
+      res.send(result);
+    });
     // send add toy data to server  
     app.post("/add-toy", async (req, res) => {
       const body = req.body;
