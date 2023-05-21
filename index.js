@@ -37,8 +37,6 @@ async function run() {
     const result = await toysCollection.createIndex(indexKey, indexField);
     console.log(result);
 
-
-
     app.get('/gallery', async (req, res) => {
       const cursor = galleryCollection.find();
       const result = await cursor.toArray();
@@ -107,6 +105,15 @@ async function run() {
       const result = await toysCollection.updateOne(filter, updateDetails, options);
       res.send(result);
 
+    })
+
+    // category data for tabs 
+    app.get('/toy/:subCategory', async(req, res)=>{
+      if(req.params.subCategory=="Disney Princess" || req.params.subCategory=="Frozen Doll" || req.params.subCategory=="Animation Doll" || req.params.subCategory=="Donald Duck"){
+        const result = await toysCollection.find({category: req.params.subCategory}).toArray();
+        console.log(result);
+        // res.send(result);
+      }
     })
 
     // send add toy data to server  
