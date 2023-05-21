@@ -44,13 +44,23 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     })
+
+    // all toys page data load 
     app.get("/all-toys", async (req, res) => {
-      const result = await toysCollection.find({}).toArray()
-      // .find({})
-      // .sort({ createdAt: -1 })
-      // .toArray();
+      console.log(req.query);
+
+      const page = parseInt(req.query.page) || 0;
+      const limit = parseInt(req.query.page) || 5;
+      const skip = page * limit;
+      const result = await toysCollection.find().skip(skip).limit(limit).toArray();
       res.send(result);
     });
+
+    // pagination part
+    app.get("/total-toys", async (req, res) => {
+      const result = await toysCollection.estimatedDocumentCount();
+      res.send({ totalToys: result });
+    })
 
     // get user specific toy details 
     app.get('/my-toys/:email', async (req, res) => {
