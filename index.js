@@ -112,19 +112,12 @@ async function run() {
     // send add toy data to server  
     app.post("/add-toy", async (req, res) => {
       const body = req.body;
-      // body.createdAt = new Date();
+      
       const result = await toysCollection.insertOne(body);
       console.log(body);
       console.log(result);
       res.send(result);
-      // if (result?.insertedId) {
-      //   return res.status(200).send(result);
-      // } else {
-      //   return res.status(404).send({
-      //     message: "can not insert try again leter",
-      //     status: false,
-      //   });
-      // }
+      
     });
 
     // delete a toy
@@ -144,8 +137,6 @@ async function run() {
   }
 }
 run().catch(console.dir);
-
-
 
 // connection checking 
 app.get('/', (req, res) => {
