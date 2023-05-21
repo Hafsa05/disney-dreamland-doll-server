@@ -26,7 +26,8 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
+    client.connect();
 
     const galleryCollection = client.db('disneyDreamlandDoll').collection('gallery');
     const toysCollection = client.db('disneyDreamlandDoll').collection('toys');
@@ -108,9 +109,9 @@ async function run() {
     })
 
     // category data for tabs 
-    app.get('/toy/:subCategory', async(req, res)=>{
-      if(req.params.subCategory=="Disney Princess" || req.params.subCategory=="Frozen Doll" || req.params.subCategory=="Animation Doll" || req.params.subCategory=="Donald Duck"){
-        const result = await toysCollection.find({category: req.params.subCategory}).toArray();
+    app.get('/toy/:subCategory', async (req, res) => {
+      if (req.params.subCategory == "Disney Princess" || req.params.subCategory == "Frozen Doll" || req.params.subCategory == "Animation Doll" || req.params.subCategory == "Donald Duck") {
+        const result = await toysCollection.find({ category: req.params.subCategory }).toArray();
         console.log(result);
         // res.send(result);
       }
@@ -119,12 +120,12 @@ async function run() {
     // send add toy data to server  
     app.post("/add-toy", async (req, res) => {
       const body = req.body;
-      
+
       const result = await toysCollection.insertOne(body);
       console.log(body);
       console.log(result);
       res.send(result);
-      
+
     });
 
     // delete a toy
